@@ -124,6 +124,43 @@ void Chain::reverseSub(int pos1, int pos2){
 */
 void Chain::weave(Chain & other) { // leaves other empty.
     /*your code here */
+    Node* currentMain = walk(head_, 1);
+    Node* currentOther = walk(other.head_, 1);
+
+    Node* tempMain = currentMain->next;
+    Node* tempOther = currentOther->next;
+
+    int count = 0;
+    for (int i = 1; i < length_; i++) {
+
+        currentMain->next = currentOther;
+        currentOther->next = tempMain;
+        
+        currentMain = tempMain;
+        currentOther = tempOther;
+
+        tempMain = currentMain->next;
+        tempOther = currentOther->next;
+
+        length_++;
+    }
+   
+    currentMain->next = currentOther;
+    currentOther->next = tail_;
+    // Finish interleaving the "next"s
+
+    // Clean up other chain
+    other.length_ = 0;
+    (other.head_)->next = other.tail_;
+    (other.tail_)->prev = other.head_;
+
+    Node* previous = head_;
+    Node* current = NULL;
+    for (int i = 1; i < length_; i++) {
+        current = walk(head_, i);
+        current->prev = previous;
+        previous = current;
+    }
 }
 
 /**
