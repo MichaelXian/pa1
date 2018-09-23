@@ -91,16 +91,14 @@ void Chain::reverseSub(int pos1, int pos2){
     Node* afterSub = walk(head_, pos2 + 1);
 
     Node* temp = NULL;
-    Node* current = NULL;
-    for (int i = pos1; i < pos2; i++) {
-        current = walk(head_, i);
+    Node* current = walk(head_, pos1);
+    for (int i = pos1; i <=pos2; i++) {
         temp = current->next;
         current->next = current->prev;
         current->prev = temp;
-        cout << "meep1" << endl;
+        current = current->prev;
     }
 
-    cout << "meep2" << endl;
     beforeSub->next->next = afterSub;
     afterSub->prev->prev = beforeSub;
 
@@ -108,6 +106,8 @@ void Chain::reverseSub(int pos1, int pos2){
     beforeSub->next = afterSub->prev;
     afterSub->prev = temp;
 }
+
+
 
 /*
 * Modifies both the current and input chains by removing
