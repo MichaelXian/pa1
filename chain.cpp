@@ -8,7 +8,6 @@
  * memory does not leak on destruction of a chain.
  */
 Chain::~Chain(){ 
-    /*your code here*/
     clear();
 }
 
@@ -19,7 +18,6 @@ Chain::~Chain(){
  * @param ndata The data to be inserted.
  */
 void Chain::insertBack(const Block & ndata){
-    /*your code here*/
     Node* temp = new Node(ndata);
     temp->prev = tail_->prev;
     temp->next = tail_;
@@ -61,7 +59,6 @@ void Chain::moveBack(int startPos, int len, int dist){
  * the start of the chain (maintaining the sentinel at the front).
  */
 void Chain::roll(int k){
-    /*your code here*/
     Node* startNode = walk(head_, length_ - k + 1);
     Node* endNode = tail_->prev;
 
@@ -85,8 +82,6 @@ void Chain::roll(int k){
  * locations in the Chain, and that pos2 >= pos1.
  */
 void Chain::reverseSub(int pos1, int pos2){
-    /*your code here */
-        
     Node* beforeSub = walk(head_, pos1 - 1);
     Node* afterSub = walk(head_, pos2 + 1);
 
@@ -123,30 +118,36 @@ void Chain::reverseSub(int pos1, int pos2){
 * cout << "Block sizes differ." << endl;
 */
 void Chain::weave(Chain & other) { // leaves other empty.
-    /*your code here */
-    Node* currentMain = walk(head_, 1);
-    Node* currentOther = walk(other.head_, 1);
+    if (size() != other.size()) {
+        cout << "Block sizes differ" << endl;
+        return; 
+    }
+    Node* currentMain = head_->next;
+    Node* currentOther = (other.head_)->next;
 
     Node* tempMain = currentMain->next;
     Node* tempOther = currentOther->next;
 
-    int count = 0;
-    for (int i = 1; i < length_; i++) {
+    int iterations = length_;
+    for (int i = 1; i < iterations; i++) {
+        if(i < other.length_) {
+            currentMain->next = currentOther;
+            currentOther->prev = currentMain;
+            currentOther->next = tempMain;
+            tempMain->prev = currentOther;
 
-        currentMain->next = currentOther;
-        currentOther->next = tempMain;
-        
-        currentMain = tempMain;
-        currentOther = tempOther;
+            currentMain = tempMain;
+            currentOther = tempOther;
 
-        tempMain = currentMain->next;
-        tempOther = currentOther->next;
-
-        length_++;
+            tempMain = currentMain->next;
+            tempOther = currentOther->next;
+        }
     }
-   
+    length_ = length_ + other.length_;
     currentMain->next = currentOther;
-    currentOther->next = tail_;
+    currentOther->prev = currentMain;
+    currentOther->next = tempMain;
+    tempMain->prev = currentOther;    
     // Finish interleaving the "next"s
 
     // Clean up other chain
@@ -154,13 +155,6 @@ void Chain::weave(Chain & other) { // leaves other empty.
     (other.head_)->next = other.tail_;
     (other.tail_)->prev = other.head_;
 
-    Node* previous = head_;
-    Node* current = NULL;
-    for (int i = 1; i < length_; i++) {
-        current = walk(head_, i);
-        current->prev = previous;
-        previous = current;
-    }
 }
 
 /**
@@ -169,7 +163,6 @@ void Chain::weave(Chain & other) { // leaves other empty.
  */
 
 void Chain::clear() {
-    /*your code here*/
     delete head_;
     delete tail_;
 }
@@ -182,7 +175,6 @@ void Chain::clear() {
  */
 
 void Chain::copy(Chain const& other) {
-    /*your code here*/
     length_ = other.length_;
     height_ = other.height_;
     width_ = other.width_;
