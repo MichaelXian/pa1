@@ -127,27 +127,24 @@ void Chain::weave(Chain & other) { // leaves other empty.
 
     Node* tempMain = currentMain->next;
     Node* tempOther = currentOther->next;
-
     int iterations = length_;
     for (int i = 1; i < iterations; i++) {
-        if(i < other.length_) {
-            currentMain->next = currentOther;
-            currentOther->prev = currentMain;
-            currentOther->next = tempMain;
-            tempMain->prev = currentOther;
+        currentMain->next = currentOther;
+        currentOther->prev = currentMain;
+        currentOther->next = tempMain;
+        tempMain->prev = currentOther;
 
-            currentMain = tempMain;
-            currentOther = tempOther;
+        currentMain = tempMain;
+        currentOther = tempOther;
 
-            tempMain = currentMain->next;
-            tempOther = currentOther->next;
-        }
+        tempMain = currentMain->next;
+        tempOther = currentOther->next;
     }
     length_ = length_ + other.length_;
     currentMain->next = currentOther;
     currentOther->prev = currentMain;
-    currentOther->next = tempMain;
-    tempMain->prev = currentOther;    
+    currentOther->next = tail_;
+    tail_->prev = currentOther;  
     // Finish interleaving the "next"s
 
     // Clean up other chain
