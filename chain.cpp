@@ -160,15 +160,17 @@ void Chain::weave(Chain & other) { // leaves other empty.
  */
 
 void Chain::clear() {
+
+    if (length_ == 0) {
+        return;
+    }
     if (length_ == 1) {
         delete head_;
-        delete this;
         return;
     }
     Node *curr = head_;
     for (curr = curr->next; curr->next != nullptr; curr = deletePrevious(curr)) {}
     delete curr;
-    delete this;
 }
 
 /* makes the current object into a copy of the parameter:
@@ -183,8 +185,20 @@ void Chain::copy(Chain const& other) {
     height_ = other.height_;
     width_ = other.width_;
 
-    head_ = new Node(*(other.head_));
-    tail_ = new Node(*(other.tail_));
+    Node* currOther = other.head_;
+    head_ = new Node(); // create head_ sentinel
+    Node* curr = head_;
+    while (currOther->next != nullptr) {
+        currOther = currOther->next;
+        Node* temp = new Node(currOther->data);
+        curr->next = temp;
+        temp = curr;
+        curr = temp->next;
+        curr->prev = temp;
+    }
+    tail_ = new Node(); // Create tail_ sentinel
+    curr->next = tail_;
+    tail_->prev = curr;
 }
 
 /**
