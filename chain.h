@@ -228,6 +228,7 @@ private:
    void copy(const Chain & other);
 
    /* =================== end of private PA1 functions ============== */
+    Node *deletePrevious(Node *pNode);
 };
 
 #endif

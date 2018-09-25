@@ -160,8 +160,15 @@ void Chain::weave(Chain & other) { // leaves other empty.
  */
 
 void Chain::clear() {
-    delete head_;
-    delete tail_;
+    if (length_ == 1) {
+        delete head_;
+        delete this;
+        return;
+    }
+    Node *curr = head_;
+    for (curr = curr->next; curr->next != nullptr; curr = deletePrevious(curr)) {}
+    delete curr;
+    delete this;
 }
 
 /* makes the current object into a copy of the parameter:
@@ -178,5 +185,15 @@ void Chain::copy(Chain const& other) {
 
     head_ = new Node(*(other.head_));
     tail_ = new Node(*(other.tail_));
+}
+
+/**
+ * Deletes the previous node and returns the next node
+ * @param pNode
+ * @return
+ */
+Chain::Node *Chain::deletePrevious(Chain::Node *pNode) {
+    delete pNode->prev;
+    return pNode->next;
 }
 
