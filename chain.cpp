@@ -161,16 +161,24 @@ void Chain::weave(Chain & other) { // leaves other empty.
 
 void Chain::clear() {
 
-    if (length_ == 0) {
-        return;
+//    if (length_ == 0) {
+//        return;
+//    }
+//    if (length_ == 1) {
+//        delete head_;
+//        return;
+//    }
+//    Node *curr = head_;
+//    for (curr = curr->next; curr->next != nullptr; curr = deletePrevious(curr)) {}
+//    delete curr;
+
+    Node* current = head_;
+    Node* temp = NULL;
+    for (int i = 0; i <= length_ + 1; i++) {
+        temp = current->next;
+        delete current;
+        current = temp;
     }
-    if (length_ == 1) {
-        delete head_;
-        return;
-    }
-    Node *curr = head_;
-    for (curr = curr->next; curr->next != nullptr; curr = deletePrevious(curr)) {}
-    delete curr;
 }
 
 /* makes the current object into a copy of the parameter:
@@ -184,21 +192,26 @@ void Chain::copy(Chain const& other) {
     length_ = other.length_;
     height_ = other.height_;
     width_ = other.width_;
+    
 
-    Node* currOther = other.head_;
-    head_ = new Node(); // create head_ sentinel
+    head_ = new Node(*(other.head_));
     Node* curr = head_;
-    while (currOther->next != nullptr) {
+    Node* currOther = (other.head_)->next;
+    curr->next = new Node(*(currOther));
+    Node* prev = head_;
+    curr = curr->next; 
+    currOther = currOther->next;
+
+    while (currOther->next != NULL) {
+        curr->next = new Node(*(currOther));
+        curr->prev = prev;
         currOther = currOther->next;
-        Node* temp = new Node(currOther->data);
-        curr->next = temp;
-        temp = curr;
-        curr = temp->next;
-        curr->prev = temp;
+        prev = curr;
+        curr = curr->next;
     }
-    tail_ = new Node(); // Create tail_ sentinel
+    tail_ = new Node(*(other.tail_));
     curr->next = tail_;
-    tail_->prev = curr;
+    curr->prev = prev;
 }
 
 /**
